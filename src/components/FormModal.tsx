@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Storage } from "@ionic/storage";
 import {
   IonModal,
   IonHeader,
@@ -24,6 +25,7 @@ const FormModal: React.FC<ModalProps> = (props) => {
   const [noRuang, setNoRuang] = useState("");
   const [kapasitas, setKapasitas] = useState("");
   const [gedung, setGedung] = useState("");
+  const store: Storage = new Storage();
   const noRuangChangeHandler = (e: any) => {
     setNoRuang(e.target.value);
   };
@@ -33,6 +35,31 @@ const FormModal: React.FC<ModalProps> = (props) => {
   const gedungChangeHandler = (e: any) => {
     setGedung(e.target.value);
   };
+
+  const createRuang = async (newRuang: any, storage: Storage) => {
+    let dataRuang = await storage.get("data-ruang");
+    if (!dataRuang) {
+      await storage.set("data-ruang", []);
+      dataRuang = await storage.get("data-ruang");
+    }
+    await storage.set("data-ruang", [...dataRuang, newRuang]);
+  };
+
+  const addRuangHandler = async (e: any) => {
+    if (noRuang && kapasitas && gedung) {
+      const newRuang = { noRuang, kapasitas, gedung };
+      createRuang(newRuang, store);
+      const allRuang = await store.get("data-ruang");
+      await console.log(allRuang);
+    }
+  };
+
+  useEffect(() => {
+    const createStore = async () => {
+      await store.create();
+    };
+    createStore();
+  }, [store]);
 
   return (
     <IonModal isOpen={props.isOpenModal}>
@@ -85,7 +112,9 @@ const FormModal: React.FC<ModalProps> = (props) => {
             />
           </IonItem>
         </div>
-        <IonButton expand="full">Add</IonButton>
+        <IonButton onClick={addRuangHandler} expand="full">
+          Add
+        </IonButton>
       </IonContent>
     </IonModal>
   );
