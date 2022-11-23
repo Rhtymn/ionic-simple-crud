@@ -26,6 +26,14 @@ const FormModal: React.FC<ModalProps> = (props) => {
   const [kapasitas, setKapasitas] = useState("");
   const [gedung, setGedung] = useState("");
   const store: Storage = new Storage();
+
+  useEffect(() => {
+    const createStore = async () => {
+      await store.create();
+    };
+    createStore();
+  }, [store]);
+
   const noRuangChangeHandler = (e: any) => {
     setNoRuang(e.target.value);
   };
@@ -34,6 +42,12 @@ const FormModal: React.FC<ModalProps> = (props) => {
   };
   const gedungChangeHandler = (e: any) => {
     setGedung(e.target.value);
+  };
+
+  const resetInput = () => {
+    setNoRuang("");
+    setKapasitas("");
+    setGedung("");
   };
 
   const createRuang = async (newRuang: any, storage: Storage) => {
@@ -51,15 +65,9 @@ const FormModal: React.FC<ModalProps> = (props) => {
       createRuang(newRuang, store);
       const allRuang = await store.get("data-ruang");
       await console.log(allRuang);
+      resetInput();
     }
   };
-
-  useEffect(() => {
-    const createStore = async () => {
-      await store.create();
-    };
-    createStore();
-  }, [store]);
 
   return (
     <IonModal isOpen={props.isOpenModal}>

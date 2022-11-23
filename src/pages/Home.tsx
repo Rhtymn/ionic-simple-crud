@@ -9,12 +9,24 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Storage } from "@ionic/storage";
 import FormModal from "../components/FormModal";
 import "./Home.css";
 
 const Home: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [dataRuang, setDataRuang] = useState([]);
+  const store = new Storage();
+
+  useEffect(() => {
+    const getAllRuang = async () => {
+      await store.create();
+      const data = await store.get("data-ruang");
+      setDataRuang(data);
+    };
+    getAllRuang();
+  }, []);
 
   const closeModal = () => {
     setIsOpenModal(false);
@@ -23,6 +35,8 @@ const Home: React.FC = () => {
   const openModal = () => {
     setIsOpenModal(true);
   };
+
+  console.log(dataRuang);
   return (
     <IonPage>
       <IonHeader>
@@ -42,7 +56,6 @@ const Home: React.FC = () => {
           </IonFabButton>
         </IonFab>
       </IonContent>
-
       <FormModal isOpenModal={isOpenModal} onCloseModal={closeModal} />
     </IonPage>
   );
