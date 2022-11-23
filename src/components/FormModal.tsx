@@ -63,9 +63,8 @@ const FormModal: React.FC<ModalProps> = (props) => {
     if (noRuang && kapasitas && gedung) {
       const newRuang = { noRuang, kapasitas, gedung };
       createRuang(newRuang, store);
-      const allRuang = await store.get("data-ruang");
-      await console.log(allRuang);
       resetInput();
+      props.onCloseModal();
     }
   };
 
