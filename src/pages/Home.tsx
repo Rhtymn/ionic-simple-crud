@@ -1,18 +1,15 @@
 import {
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
-  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { add } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { Storage } from "@ionic/storage";
 import FormModal from "../components/FormModal";
 import "./Home.css";
+import FloatButton from "../components/FloatButton";
 
 const Home: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -45,16 +42,7 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen color="dark">
-        <IonFab
-          slot="fixed"
-          vertical="bottom"
-          horizontal="end"
-          onClick={openModal}
-        >
-          <IonFabButton>
-            <IonIcon icon={add}></IonIcon>
-          </IonFabButton>
-        </IonFab>
+        <FloatButton onClickFButton={openModal} />
       </IonContent>
       <FormModal isOpenModal={isOpenModal} onCloseModal={closeModal} />
     </IonPage>
