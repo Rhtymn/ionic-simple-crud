@@ -2,15 +2,15 @@ import React from "react";
 import { IonModal, IonList, IonItem, IonLabel } from "@ionic/react";
 
 interface OptionModalProps {
-  selectedRuang: Object;
   isOpenModal: boolean;
   onOpenModal: (arg: boolean) => void;
+  onDeleteRuang: () => void;
 }
 
 const OptionModal: React.FC<OptionModalProps> = ({
-  selectedRuang,
   isOpenModal,
   onOpenModal,
+  onDeleteRuang,
 }) => {
   return (
     <IonModal
@@ -22,7 +22,7 @@ const OptionModal: React.FC<OptionModalProps> = ({
         <h1>Option</h1>
 
         <IonList lines="none">
-          <IonItem>
+          <IonItem onClick={onDeleteRuang}>
             <IonLabel>Delete Ruang</IonLabel>
           </IonItem>
           <IonItem>

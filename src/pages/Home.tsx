@@ -15,11 +15,21 @@ import "./Home.css";
 import FloatButton from "../components/FloatButton";
 import OptionModal from "../components/OptionModal";
 
+interface Ruang {
+  noRuang: string;
+  gedung: string;
+  kapasitas: string;
+}
+
 const Home: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
   const [dataRuang, setDataRuang] = useState([]);
-  const [selectedRuang, setSelectedRuang] = useState({});
+  const [selectedRuang, setSelectedRuang] = useState<Ruang>({
+    noRuang: "",
+    gedung: "",
+    kapasitas: "",
+  });
   const store = new Storage();
 
   useEffect(() => {
@@ -29,7 +39,7 @@ const Home: React.FC = () => {
       setDataRuang(data);
     };
     getAllRuang();
-  }, [isOpenModal, isOpenOptionModal]);
+  }, [isOpenModal, isOpenOptionModal, store]);
 
   const closeModal = () => {
     setIsOpenModal(false);
@@ -37,6 +47,17 @@ const Home: React.FC = () => {
 
   const openModal = () => {
     setIsOpenModal(true);
+  };
+
+  const deleteRuang = async () => {
+    const allData = await store.get("data-ruang");
+    const newData = await allData.filter(
+      (data: Ruang) =>
+        `${data.gedung}${data.noRuang}` !==
+        `${selectedRuang.gedung}${selectedRuang.noRuang}`
+    );
+    await store.set("data-ruang", newData);
+    setIsOpenOptionModal(false);
   };
 
   const clickRuangItemHandler = (e: any) => {
@@ -72,9 +93,9 @@ const Home: React.FC = () => {
       </IonContent>
       <FormModal isOpenModal={isOpenModal} onCloseModal={closeModal} />
       <OptionModal
-        selectedRuang={selectedRuang}
         isOpenModal={isOpenOptionModal}
         onOpenModal={setIsOpenOptionModal}
+        onDeleteRuang={deleteRuang}
       />
     </IonPage>
   );
